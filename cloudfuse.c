@@ -433,6 +433,7 @@ static struct options {
     char region[OPTION_SIZE];
     char use_snet[OPTION_SIZE];
     char verify_ssl[OPTION_SIZE];
+    char configfile[OPTION_SIZE];
 } options = {
     .username = "",
     .password = "",
@@ -442,6 +443,7 @@ static struct options {
     .region = "",
     .use_snet = "false",
     .verify_ssl = "true",
+    .configfile = ""
 };
 
 int parse_option(void *data, const char *arg, int key, struct fuse_args *outargs)
@@ -455,6 +457,7 @@ int parse_option(void *data, const char *arg, int key, struct fuse_args *outargs
       sscanf(arg, " region = %[^\r\n]", options.region) ||
       sscanf(arg, " use_snet = %[^\r\n]", options.use_snet) ||
       sscanf(arg, " verify_ssl = %[^\r\n]", options.verify_ssl))
+      sscanf(arg, " configfile = %[^\r\n]", options.configfile))
     return 0;
   if (!strcmp(arg, "-f") || !strcmp(arg, "-d") || !strcmp(arg, "debug"))
     cloudfs_debug(1);
@@ -466,16 +469,10 @@ int main(int argc, char **argv)
   char settings_filename[MAX_PATH_SIZE] = "";
   FILE *settings;
   struct fuse_args args = FUSE_ARGS_INIT(argc, argv);
-  int i = 0;
-  
-  for (i = 1; i < argc; i++)
-  {
-    if (strcmp(argv[i], "-o") == 0) 
-    {
-        snprintf(settings_filename, sizeof(settings_filename), "%s", argv[i + 1]);
-        break;
-    }
-  }
+
+  fuse_opt_parse(&args, &options, NULL, parse_option);
+
+  snprintf(settings_filename, sizeof(settings_filename), "%s", options.configfile);
 
   if ((settings = fopen(settings_filename, "r")))
   {
@@ -487,8 +484,6 @@ int main(int argc, char **argv)
     fprintf(stderr, "unable to open configuration file:%s.\n", settings_filename);
     return 1;
   }
-
-  fuse_opt_parse(&args, &options, NULL, parse_option);
 
   cache_timeout = atoi(options.cache_timeout);
 
