@@ -466,8 +466,16 @@ int main(int argc, char **argv)
   char settings_filename[MAX_PATH_SIZE] = "";
   FILE *settings;
   struct fuse_args args = FUSE_ARGS_INIT(argc, argv);
+  
+  for (i = 1; i < argc; i++)
+  {
+    if (strcmp(argv[i], "-z") == 0) 
+    {
+        snprintf(settings_filename, sizeof(settings_filename), "%s", argv[i + 1]);
+        break;
+    }
+  }
 
-  snprintf(settings_filename, sizeof(settings_filename), "%s", args[0]);
   if ((settings = fopen(settings_filename, "r")))
   {
     char line[OPTION_SIZE];
@@ -475,11 +483,11 @@ int main(int argc, char **argv)
       parse_option(NULL, line, -1, &args);
     fclose(settings);
   } else {
-    fprintf(stderr, "unable to open configuration file.\n");
+    fprintf(stderr, "unable to open configuration file:%s.\n", settings_filename);
     return 1;
   }
 
-  fuse_opt_parse(&args[1], &options, NULL, parse_option);
+  fuse_opt_parse(&args, &options, NULL, parse_option);
 
   cache_timeout = atoi(options.cache_timeout);
 
