@@ -466,8 +466,9 @@ int main(int argc, char **argv)
   char settings_filename[MAX_PATH_SIZE] = "";
   FILE *settings;
   struct fuse_args args = FUSE_ARGS_INIT(argc, argv);
+  int i = 0;
   
-  for (int i = 1; i < argc; i++)
+  for (i = 1; i < argc; i++)
   {
     if (strcmp(argv[i], "-z") == 0) 
     {
