@@ -470,7 +470,7 @@ int main(int argc, char **argv)
   
   for (i = 1; i < argc; i++)
   {
-    if (strcmp(argv[i], "-z") == 0) 
+    if (strcmp(argv[i], "-o") == 0) 
     {
         snprintf(settings_filename, sizeof(settings_filename), "%s", argv[i + 1]);
         break;
