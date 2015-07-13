@@ -456,7 +456,7 @@ int parse_option(void *data, const char *arg, int key, struct fuse_args *outargs
       sscanf(arg, " authurl = %[^\r\n]", options.authurl) ||
       sscanf(arg, " region = %[^\r\n]", options.region) ||
       sscanf(arg, " use_snet = %[^\r\n]", options.use_snet) ||
-      sscanf(arg, " verify_ssl = %[^\r\n]", options.verify_ssl)) ||
+      sscanf(arg, " verify_ssl = %[^\r\n]", options.verify_ssl) ||
       sscanf(arg, " configfile = %[^\r\n]", options.configfile))
     return 0;
   if (!strcmp(arg, "-f") || !strcmp(arg, "-d") || !strcmp(arg, "debug"))
