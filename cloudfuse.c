@@ -478,7 +478,9 @@ int main(int argc, char **argv)
     fprintf(stderr, "unable to open configuration file.\n");
     return 1;
   }
-  
+
+  fuse_opt_parse(&args[1], &options, NULL, parse_option);
+
   cache_timeout = atoi(options.cache_timeout);
 
   if (!*options.username || !*options.password)
