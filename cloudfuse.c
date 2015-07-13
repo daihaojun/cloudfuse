@@ -467,7 +467,7 @@ int main(int argc, char **argv)
   FILE *settings;
   struct fuse_args args = FUSE_ARGS_INIT(argc, argv);
   
-  for (i = 1; i < argc; i++)
+  for (int i = 1; i < argc; i++)
   {
     if (strcmp(argv[i], "-z") == 0) 
     {
