@@ -446,15 +446,15 @@ static struct options {
 
 int parse_option(void *data, const char *arg, int key, struct fuse_args *outargs)
 {
-  if (sscanf(arg, " username = %[^\r\n ]", options.username) ||
-      sscanf(arg, " tenant = %[^\r\n ]", options.tenant) ||
-      sscanf(arg, " api_key = %[^\r\n ]", options.password) ||
-      sscanf(arg, " password = %[^\r\n ]", options.password) ||
-      sscanf(arg, " cache_timeout = %[^\r\n ]", options.cache_timeout) ||
-      sscanf(arg, " authurl = %[^\r\n ]", options.authurl) ||
-      sscanf(arg, " region = %[^\r\n ]", options.region) ||
-      sscanf(arg, " use_snet = %[^\r\n ]", options.use_snet) ||
-      sscanf(arg, " verify_ssl = %[^\r\n ]", options.verify_ssl))
+  if (sscanf(arg, " username = %[^\r\n]", options.username) ||
+      sscanf(arg, " tenant = %[^\r\n]", options.tenant) ||
+      sscanf(arg, " api_key = %[^\r\n]", options.password) ||
+      sscanf(arg, " password = %[^\r\n]", options.password) ||
+      sscanf(arg, " cache_timeout = %[^\r\n]", options.cache_timeout) ||
+      sscanf(arg, " authurl = %[^\r\n]", options.authurl) ||
+      sscanf(arg, " region = %[^\r\n]", options.region) ||
+      sscanf(arg, " use_snet = %[^\r\n]", options.use_snet) ||
+      sscanf(arg, " verify_ssl = %[^\r\n]", options.verify_ssl))
     return 0;
   if (!strcmp(arg, "-f") || !strcmp(arg, "-d") || !strcmp(arg, "debug"))
     cloudfs_debug(1);
@@ -467,17 +467,18 @@ int main(int argc, char **argv)
   FILE *settings;
   struct fuse_args args = FUSE_ARGS_INIT(argc, argv);
 
-  snprintf(settings_filename, sizeof(settings_filename), "%s/.cloudfuse", get_home_dir());
+  snprintf(settings_filename, sizeof(settings_filename), "%s", args[0]);
   if ((settings = fopen(settings_filename, "r")))
   {
     char line[OPTION_SIZE];
     while (fgets(line, sizeof(line), settings))
       parse_option(NULL, line, -1, &args);
     fclose(settings);
+  } else {
+    fprintf(stderr, "unable to open configuration file.\n");
+    return 1;
   }
-
-  fuse_opt_parse(&args, &options, NULL, parse_option);
-
+  
   cache_timeout = atoi(options.cache_timeout);
 
   if (!*options.username || !*options.password)
